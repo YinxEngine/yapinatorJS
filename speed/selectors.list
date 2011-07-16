@@ -1,0 +1,67 @@
+body
+div
+div p
+body div
+div > p
+div + p
+div ~ p
+div[class^=exa][class$=mple]
+div p a
+div, p, a
+p, P
+.note
+div.example
+ul .tocline2
+div.example, div.note
+ul.toc li.tocline2
+ul.toc > li.tocline2
+.example.pattern
+#title
+h1#title
+div #title
+h1#title + div > p
+a[href][class]
+a[href][lang][class]
+div[class]
+div[class=example]
+div[class^="exa"]
+DIV[class$=mple]
+div[class*=e]
+div[class|=dialog]
+div[class!=made_up]
+div[class~=mple]
+div[class~=example]
+div[class^=exa][class$=mple]
+abbr[lang|=fr]
+*:lang(fr)
+h1[id]:contains(Selectors)
+div:not(.example)
+*:not(div)
+:has(div)
+p:not(:nth-child(5))
+*:empty
+a:link
+p:contains(selectors)
+p:only-child
+p:last-child
+p:first-child
+P:nth-child(even)
+p:nth-child(2n+2)
+p:nth-child(odd)
+p:nth-child(2n+1)
+p:nth-child(10n-1)
+p:nth-child(10n+9)
+p:nth-child(1n+0)
+p:nth-child(n)
+p:nth-child(-n+6)
+p:nth-child(0n+1)
+p:nth-child(1)
+div + p:nth-last-child(2n)
+p:nth-last-child(-n+2)
+p:nth-last-child(even)
+p:only-of-type
+p:last-of-type
+p:first-of-type
+p:nth-of-type(even)
+p:nth-last-of-type(odd)
+p:nth-last-of-type(-n+2)
