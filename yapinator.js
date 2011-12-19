@@ -640,9 +640,16 @@
 
 		cleaner = {
 			// get rid of leading and trailing spaces
-			rms: function( s ) {
-				return s.replace(/^\s+|\s+$/g, "") ;
-			},
+			rms: (function() {
+				if (String.prototype.trim) {
+					return function ( s ) {
+						return s.trim();
+					}
+				}
+				return function( s ) {
+					return s.replace(/^\s+|\s+$/g, '') ;
+				}
+			}()),
 			// remove spaces around '['  and ']' of attributes
 			rmb: function( s ) {
 				return s.replace( /(\[)\s+/g, "$1").replace( /\s+(\])/g, "$1")
