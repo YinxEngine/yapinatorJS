@@ -14,21 +14,21 @@
  * nwmatcher - Diego Perini
  * 
 */
-(function() {
+(function(win, doc, undefined) {
 	// caching global document
-	var doc = document,
+	// var doc = document,
 	// caching global window
-	win = window,
+	// win = window,
 	// will speed up references to undefined, and allows munging its name.
-	undefined,
+	// undefined,
 	// [array] cache for selected nodes, no leaks in IE detected
-	cache = [],
+	var cache = [],
 	// cache RegExp object for searching duplicates
 	regCache = {},
 	// save method reference
 	slice = Array.prototype.slice,
 	// @namespace for Yapinator
-	Yapinator = (function() {
+	Yapinator = (function () {
 		// The current version of yapinator
 		var version = "0.1",
 		// user agent
@@ -640,9 +640,16 @@
 
 		cleaner = {
 			// get rid of leading and trailing spaces
-			rms: function( s ) {
-				return s.replace(/^\s+|\s+$/g, "") ;
-			},
+			rms: (function() {
+				if (String.prototype.trim) {
+					return function ( s ) {
+						return s.trim();
+					}
+				}
+				return function( s ) {
+					return s.replace(/^\s+|\s+$/g, '') ;
+				}
+			}()),
 			// remove spaces around '['  and ']' of attributes
 			rmb: function( s ) {
 				return s.replace( /(\[)\s+/g, "$1").replace( /\s+(\])/g, "$1")
@@ -658,6 +665,14 @@
 			// replace (even) with (2n) & (odd) with (2n+1) - pseudo arg (for caching)
 			rmnth: function( s ) {
 				return s.replace( /\(\s*even\s*\)/gi, "(2n)").replace( /\(\s*odd\s*\)/gi, "(2n+1)");
+			},
+            // pre clean
+			preclean: function ( s ) {
+				return this.rmnth( this.rms( s ) );
+			},
+            // post clean
+			postclean: function ( s ) {
+				return this.rmb( this.rmq( s ) );
 			},
 			// total clean
 			clean: function( s ) {
@@ -739,10 +754,11 @@
 			version: version,
 			// main selector function
 			select: function( selector, root, noCache, loop, nthrun ) {
+				var oldSelector = cleaner.preclean(selector);
 				// Return cache if exists
 				// Return no cached result if root specified
-				if ( cache[ selector ] && !noCache && !root ) {
-					return cache[ selector ];
+				if ( cache[ oldSelector ] && !noCache && !root ) {
+					return cache[ oldSelector ];
 				}
 				// re-define noCache
 				noCache = noCache || !!root;
@@ -756,7 +772,7 @@
 					return [];
 				}
 				// clean selector
-				selector = cleaner.clean(selector);
+				selector = cleaner.postclean(oldSelector);
 				var m, set;
 				// qucik selection - only ID, CLASS TAG, and ATTR for the very first occurence
 				if ( ( m = selectors.reg.sharpTest.exec( selector ) ) !== null ) {
@@ -816,7 +832,7 @@
 						cleaner.cleanElem( set );
 					}
 				}
-				return !noCache ? cache[ selector ] = set: set;
+				return !noCache ? cache[ oldSelector ] = set: set;
 			},
 			Loader: function (){
 				DOMChngEvent();
@@ -828,4 +844,4 @@
 	// EXPOSE
 	win.Yapinator = Yapinator;
 	win.Yap = Yapinator.select;
-})();
+})( window, document );

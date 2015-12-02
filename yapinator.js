@@ -14,7 +14,7 @@
  * nwmatcher - Diego Perini
  * 
 */
-(function(window, doc, undefined) {
+(function(win, doc, undefined) {
 	// caching global document
 	// var doc = document,
 	// caching global window
@@ -28,7 +28,7 @@
 	// save method reference
 	slice = Array.prototype.slice,
 	// @namespace for Yapinator
-	Yapinator = (function() {
+	Yapinator = (function () {
 		// The current version of yapinator
 		var version = "0.1",
 		// user agent
@@ -666,7 +666,7 @@
 			rmnth: function( s ) {
 				return s.replace( /\(\s*even\s*\)/gi, "(2n)").replace( /\(\s*odd\s*\)/gi, "(2n+1)");
 			},
-            // pre-clean
+            // pre clean
 			preclean: function ( s ) {
 				return this.rmnth( this.rms( s ) );
 			},
@@ -844,4 +844,4 @@
 	// EXPOSE
 	win.Yapinator = Yapinator;
 	win.Yap = Yapinator.select;
-})( window, document);
+})( window, document );
