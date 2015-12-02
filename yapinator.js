@@ -14,15 +14,15 @@
  * nwmatcher - Diego Perini
  * 
 */
-(function() {
-	// caching global document
-	var doc = document,
+(function(win, doc, undefined) {
+	// caching global window and document
+	// var doc = document,
 	// caching global window
-	win = window,
+	// win = window,
 	// will speed up references to undefined, and allows munging its name.
-	undefined,
+	// undefined,
 	// [array] cache for selected nodes, no leaks in IE detected
-	cache = [],
+	var cache = [],
 	// cache RegExp object for searching duplicates
 	regCache = {},
 	// save method reference
@@ -49,7 +49,7 @@
 			// make sure browser supports getElementsByClassName exists
 			bycls: !!doc.getElementsByClassName,
 			// make sure [ nodeList ] is slicable
-			nodeSlice: !!(window.attachEvent && !window.opera)
+			nodeSlice: !!(win.attachEvent && !win.opera)
 		},
 		// core functions
 		core = {
@@ -666,6 +666,14 @@
 			rmnth: function( s ) {
 				return s.replace( /\(\s*even\s*\)/gi, "(2n)").replace( /\(\s*odd\s*\)/gi, "(2n+1)");
 			},
+            // pre clean - rmnth replace (even) with (2n) & (odd) with (2n+1)
+			preclean: function ( s ) {
+				return this.rmnth( this.rms( s ) );
+			},
+            // post clean - remove all quotations
+			postclean: function ( s ) {
+				return this.rmb( this.rmq( s ) );
+			},
 			// total clean
 			clean: function( s ) {
 				return this.rmnth( this.rmb( this.rmq( this.rms( s ) ) ) );
@@ -746,10 +754,12 @@
 			version: version,
 			// main selector function
 			select: function( selector, root, noCache, loop, nthrun ) {
+                // cache pre-cleaned selector
+				var oldSelector = cleaner.preclean(selector);
 				// Return cache if exists
 				// Return no cached result if root specified
-				if ( cache[ selector ] && !noCache && !root ) {
-					return cache[ selector ];
+				if ( cache[ oldSelector ] && !noCache && !root ) {
+					return cache[ oldSelector ];
 				}
 				// re-define noCache
 				noCache = noCache || !!root;
@@ -763,7 +773,8 @@
 					return [];
 				}
 				// clean selector
-				selector = cleaner.clean(selector);
+				selector = cleaner.postclean(oldSelector);
+                
 				var m, set;
 				// qucik selection - only ID, CLASS TAG, and ATTR for the very first occurence
 				if ( ( m = selectors.reg.sharpTest.exec( selector ) ) !== null ) {
@@ -823,7 +834,7 @@
 						cleaner.cleanElem( set );
 					}
 				}
-				return !noCache ? cache[ selector ] = set: set;
+				return !noCache ? cache[ oldSelector ] = set: set;
 			},
 			Loader: function (){
 				DOMChngEvent();
@@ -835,4 +846,4 @@
 	// EXPOSE
 	win.Yapinator = Yapinator;
 	win.Yap = Yapinator.select;
-})();
+})( window, document );
