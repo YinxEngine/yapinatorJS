@@ -666,6 +666,12 @@
 			rmnth: function( s ) {
 				return s.replace( /\(\s*even\s*\)/gi, "(2n)").replace( /\(\s*odd\s*\)/gi, "(2n+1)");
 			},
+			preclean: function ( s ) {
+				return this.rmnth( this.rms( s ) );
+			},
+			postclean: function ( s ) {
+				return this.rmb( this.rmq( s ) );
+			},
 			// total clean
 			clean: function( s ) {
 				return this.rmnth( this.rmb( this.rmq( this.rms( s ) ) ) );
@@ -746,10 +752,11 @@
 			version: version,
 			// main selector function
 			select: function( selector, root, noCache, loop, nthrun ) {
+				var oldSelector = cleaner.preclean(selector);
 				// Return cache if exists
 				// Return no cached result if root specified
-				if ( cache[ selector ] && !noCache && !root ) {
-					return cache[ selector ];
+				if ( cache[ oldSelector ] && !noCache && !root ) {
+					return cache[ oldSelector ];
 				}
 				// re-define noCache
 				noCache = noCache || !!root;
@@ -763,7 +770,7 @@
 					return [];
 				}
 				// clean selector
-				selector = cleaner.clean(selector);
+				selector = cleaner.postclean(oldSelector);
 				var m, set;
 				// qucik selection - only ID, CLASS TAG, and ATTR for the very first occurence
 				if ( ( m = selectors.reg.sharpTest.exec( selector ) ) !== null ) {
@@ -823,7 +830,7 @@
 						cleaner.cleanElem( set );
 					}
 				}
-				return !noCache ? cache[ selector ] = set: set;
+				return !noCache ? cache[ oldSelector ] = set: set;
 			},
 			Loader: function (){
 				DOMChngEvent();
