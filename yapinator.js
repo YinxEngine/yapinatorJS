@@ -14,7 +14,7 @@
  * nwmatcher - Diego Perini
  * 
 */
-(function(window, doc, undefined) {
+(function(win, doc, undefined) {
 	// caching global document
 	// var doc = document,
 	// caching global window
