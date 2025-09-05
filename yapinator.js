@@ -2,7 +2,7 @@
  * Yapinator CSS Selector Engine v0.1
  * https://github.com/yapi/yapinator
  *
- * Copyright (c) 2011 Stanley Ilukhor (stan nesi)
+ * Copyright (c) 2011 stan nesi
  * Dual licensed under the MIT and GPL licenses.
  * 
  * Date: 18-05-2011 17:34:21 -0500 (Wed, 18 May 2011)
